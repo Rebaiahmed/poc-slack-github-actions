@@ -96,8 +96,8 @@ jobs:
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
-            "text": "Deployment for poc-slack-github-actions failed on main branch."
             {
+             "text": "Deployment for poc-slack-github-actions failed on main branch."
               "blocks": [
                 {
                   "type": "section",
