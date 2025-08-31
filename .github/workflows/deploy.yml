@@ -55,32 +55,70 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - name: Notify Slack
+      - name: Notify Slack (Success)
+        if: success()
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
             {
-              "text": "GitHub Actions Deployment Notification",
-              "attachments": [
+              "blocks": [
                 {
-                  "color": "${{ job.status == 'success' && '#36a64f' || '#ff0000' }}",
-                  "title": "${{ job.status == 'success' && '✅ Deployment Success' || '❌ Deployment Failed' }}",
-                  "mrkdwn_in": ["text", "fields"],
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*✅ Deployment Success*"
+                  }
+                },
+                {
+                  "type": "section",
                   "fields": [
                     {
-                      "title": "Repo",
-                      "value": "${{ github.repository }}",
-                      "short": true
+                      "type": "mrkdwn",
+                      "text": "*Repo:*\n${{ github.repository }}"
                     },
                     {
-                      "title": "Branch",
-                      "value": "${{ github.ref_name }}",
-                      "short": true
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
                     },
                     {
-                      "title": "Commit",
-                      "value": "<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>",
-                      "short": true
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack (Failure)
+        if: failure()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*❌ Deployment Failed*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repo:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}"
                     }
                   ]
                 }
