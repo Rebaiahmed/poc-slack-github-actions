@@ -82,6 +82,7 @@ jobs:
         with:
           payload: |
             {
+              "text": "GitHub Actions Deployment Notification",
               "attachments": [
                 {
                   "color": "#ff0000",
